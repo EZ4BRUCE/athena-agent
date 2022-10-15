@@ -3,11 +3,12 @@ package client
 import (
 	"context"
 	"encoding/json"
-	"github.com/DeltaDemand/athena-agent/global"
-	"go.etcd.io/etcd/client/v3"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/DeltaDemand/athena-agent/global"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type Etcd struct {

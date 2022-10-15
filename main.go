@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
+
 	appConfigs "github.com/DeltaDemand/athena-agent/configs"
 	"github.com/DeltaDemand/athena-agent/global"
 	"github.com/DeltaDemand/athena-agent/internal/client"
 	"github.com/DeltaDemand/athena-agent/internal/inputArgs"
 	"github.com/DeltaDemand/athena-agent/internal/sampler"
-	"os"
-	"os/signal"
-	"sync"
-	"syscall"
 )
 
 var wg sync.WaitGroup
@@ -38,7 +39,11 @@ func main() {
 
 	//每个指标都启动它的采样器
 	for _, metric := range global.Metrics {
-		metric.(sampler.Sampler).Execute(&wg)
+		m, ok := metric.(sampler.Sampler)
+		if !ok {
+			global.Logger.Println("采样器解析错误，Agent退出...")
+		}
+		m.Execute(&wg)
 	}
 	wg.Wait()
 	//退出把云端配置删了

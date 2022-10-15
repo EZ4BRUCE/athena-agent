@@ -3,11 +3,12 @@
 package client
 
 import (
+	"sync"
+
 	"github.com/DeltaDemand/athena-agent/global"
 	pb "github.com/EZ4BRUCE/athena-proto/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"sync"
 )
 
 type ReportServer struct {
@@ -28,6 +29,7 @@ func (r *ReportServer) ConnectGRPC() error {
 	var err error
 	//连接时上锁，防止其他goroutine使用该连接
 	connSafe.Lock()
+	defer connSafe.Unlock()
 	conn, err = grpc.Dial(r.GetAddr(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		global.Logger.Println("连接gPRC服务失败,Agent暂停,可通过etcd更新Agent参数pause重新启动;  dial的server端是：", r.GetAddr(), err)
@@ -45,7 +47,7 @@ func (r *ReportServer) ConnectGRPC() error {
 			return pb.NewReportServerClient(conn)
 		},
 	}
-	connSafe.Unlock()
+
 	return nil
 }
 

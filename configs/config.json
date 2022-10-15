@@ -9,11 +9,11 @@
         "port": "8888"
     },
     "Etcd": {
-        "apply": true,
+        "apply": false,
         "config_server": "config-s01",
         "agent_group": "g01",
         "agent_name": "A01",
-        "end_points": ["112.74.60.132:2379"],
+        "end_points": [""],
         "dial_timeout": 5
     },
     "cpu_rate": {
