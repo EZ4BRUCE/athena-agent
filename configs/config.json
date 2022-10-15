@@ -6,7 +6,7 @@
     "ReportServer":{
         "check_alive":120,
         "ip":"athena-server",
-        "port": "8888"
+        "port": "8880"
     },
     "Etcd": {
         "apply": false,
